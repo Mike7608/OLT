@@ -22,13 +22,16 @@ class CourseViewSet(viewsets.ModelViewSet):
                 permission_classes = [IsAuthenticated, IsModeratorMaterials | IsOwner]
             case 'update':
                 permission_classes = [IsAuthenticated, IsModeratorMaterials | IsOwner]
-            case _:
+            case 'destroy':
                 permission_classes = [IsAuthenticated, IsOwner]
+            case _:
+                permission_classes = None
 
         return [permission() for permission in permission_classes]
 
 
 class LessonCreateAPIView(generics.CreateAPIView):
+    # create
     serializer_class = LessonSerializer
     permission_classes = [IsAuthenticated, ~IsModeratorMaterials]
 
@@ -37,24 +40,28 @@ class LessonCreateAPIView(generics.CreateAPIView):
 
 
 class LessonListAPIView(generics.ListAPIView):
+    #  list
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
     permission_classes = [IsAuthenticated]
 
 
 class LessonRetrieveAPIView(generics.RetrieveAPIView):
+    # detail
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
     permission_classes = [IsAuthenticated, IsModeratorMaterials | IsOwner]
 
 
 class LessonUpdateAPIView(generics.UpdateAPIView):
+    # update
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
     permission_classes = [IsAuthenticated, IsModeratorMaterials | IsOwner]
 
 
 class LessonDestroyAPIView(generics.DestroyAPIView):
+    # delete
     queryset = Lesson.objects.all()
     permission_classes = [IsAuthenticated, IsOwner]
 
