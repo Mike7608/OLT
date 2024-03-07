@@ -17,7 +17,7 @@ class CourseViewSet(viewsets.ModelViewSet):
             case 'list':
                 permission_classes = [IsAuthenticated]
             case 'create':
-                permission_classes = [IsAuthenticated]
+                permission_classes = [IsAuthenticated, ~IsModeratorMaterials]
             case 'retrieve':
                 permission_classes = [IsAuthenticated, IsModeratorMaterials | IsOwner]
             case 'update':
@@ -30,7 +30,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
 class LessonCreateAPIView(generics.CreateAPIView):
     serializer_class = LessonSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, ~IsModeratorMaterials]
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

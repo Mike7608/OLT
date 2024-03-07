@@ -1,3 +1,4 @@
+from rest_framework import permissions
 from rest_framework.permissions import BasePermission
 
 
@@ -6,10 +7,9 @@ class IsOwner(BasePermission):
 
     #  проверка пользователя на владельца
     def has_object_permission(self, request, view, obj):
-        if request.user == obj.user:
+        if request.method in permissions.SAFE_METHODS:
             return True
-        else:
-            return False
+        return request.user == obj.user
 
 
 class IsModeratorMaterials(BasePermission):
