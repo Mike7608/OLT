@@ -61,12 +61,12 @@ class LessonAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_subscription(self):
-        # Создание подписки
+        # Создание подписки на курс
         response = self.client.post('/subscription/', {'course_id': self.course.id}, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['message'], 'подписка добавлена')
 
-        # Удаление подписки
+        # Удаление подписки на курс
         response = self.client.post('/subscription/', {'course_id': self.course.id}, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['message'], 'подписка удалена')
