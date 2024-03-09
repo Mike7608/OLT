@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from materials.models import Course, Lesson
+from materials.models import Course, Lesson, Subscription
 from materials.validators import VideoValidator
 
 
@@ -15,10 +15,11 @@ class LessonSerializer(serializers.ModelSerializer):
 class CourseSerializer(serializers.ModelSerializer):
     lessons = LessonSerializer(many=True, read_only=True)
     count_lessons = serializers.SerializerMethodField()
+    is_subscribed = serializers.SerializerMethodField()
 
     class Meta:
         model = Course
-        fields = ('id', 'title', 'pict', 'description', 'lessons', 'count_lessons')
+        fields = ('id', 'title', 'pict', 'description', 'lessons', 'count_lessons', 'is_subscribed')
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
@@ -27,3 +28,8 @@ class CourseSerializer(serializers.ModelSerializer):
 
     def get_count_lessons(self, instance):
         return instance.lesson_set.count()
+
+    def get_is_subscribed(self, obj):
+        user = self.context['request'].user
+        is_subscribed = Subscription.objects.filter(user=user, course=obj).exists()
+        return is_subscribed
